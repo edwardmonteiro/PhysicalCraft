@@ -4,12 +4,27 @@ import android.app.*;import android.os.*;import android.content.*;import android
 public final class MainActivity extends Activity {
  static final int BG=Color.rgb(12,29,39),PANEL=Color.rgb(23,45,55),MINT=Color.rgb(118,242,206),TEXT=Color.rgb(234,244,241),MUTED=Color.rgb(158,184,187),GOLD=Color.rgb(255,216,144);
  WorldView world;HudView hud;Physics.Mission mission;GemmaDirector director;int completed;long worldSeed=730211;boolean started=false,sound=true,autoGemma=true;String lastMessage="";private ToneGenerator tones;private final Handler handler=new Handler(Looper.getMainLooper());private Dialog active;private boolean resumed;
- @Override public void onCreate(Bundle b){super.onCreate(b);getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);getWindow().setDecorFitsSystemWindows(false);immersive();director=new GemmaDirector(this);android.content.SharedPreferences p=getSharedPreferences("expedition",0);completed=p.getInt("completed",0);worldSeed=p.getLong("seed",730211);sound=p.getBoolean("sound",true);autoGemma=p.getBoolean("autoGemma",true);mission=Physics.create(completed,worldSeed);
+ @Override public void onCreate(Bundle b){super.onCreate(b);
+  String previous=CrashReport.take(this);
+  if(previous!=null){showFailure(previous);return;}
+  try{initializeGame();}catch(RuntimeException|LinkageError error){startupFailure(error);}
+ }
+ private void initializeGame(){getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);getWindow().setDecorFitsSystemWindows(false);director=new GemmaDirector(this);android.content.SharedPreferences p=getSharedPreferences("expedition",0);completed=p.getInt("completed",0);worldSeed=p.getLong("seed",730211);sound=p.getBoolean("sound",true);autoGemma=p.getBoolean("autoGemma",true);mission=Physics.create(completed,worldSeed);
   try{String saved=p.getString("mission","");if(!saved.isEmpty()){JSONObject j=new JSONObject(saved);mission=Blueprint.parse(saved,completed);mission.source=j.optString("source","Campanha local");}}catch(Exception ignored){}
   world=new WorldView(this);world.missionIndex=completed;world.environment=mission.environment;
   try{JSONObject edits=new JSONObject(p.getString("edits","{}"));Iterator<String> it=edits.keys();while(it.hasNext()){String k=it.next();world.edits.put(k,edits.getInt(k));}}catch(Exception ignored){}
   world.restore(Double.longBitsToDouble(p.getLong("x",Double.doubleToLongBits(5))),Double.longBitsToDouble(p.getLong("z",Double.doubleToLongBits(8))),p.getFloat("yaw",.87f),p.getFloat("pitch",-.08f));
   FrameLayout root=new FrameLayout(this);root.addView(world);hud=new HudView(this);root.addView(hud);setContentView(root);root.post(this::immersive);root.setOnApplyWindowInsetsListener((v,in)->{android.graphics.Insets safe=in.getInsets(WindowInsets.Type.systemBars()|WindowInsets.Type.displayCutout());hud.safeLeft=safe.left;hud.safeRight=safe.right;hud.safeTop=safe.top;hud.safeBottom=safe.bottom;return in;});try{tones=new ToneGenerator(AudioManager.STREAM_MUSIC,35);}catch(Exception ignored){}
+ }
+ void startupFailure(Throwable error){android.util.Log.e("PhysicalCraft","Startup failed",error);showFailure(CrashReport.describe(error));}
+ private void showFailure(String report){
+  if(world!=null){world.paused=true;world.onPause();}
+  LinearLayout box=panel("PHYSICALCRAFT · DIAGNÓSTICO","Não foi possível abrir o mundo");
+  box.addView(text("Copie o diagnóstico e envie na conversa para corrigirmos a falha. Seu progresso continua salvo.",17,TEXT));
+  TextView details=text(report,12,MUTED);details.setTextIsSelectable(true);box.addView(details);
+  box.addView(button("Copiar diagnóstico",()->{((android.content.ClipboardManager)getSystemService(CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("PhysicalCraft",report));message("Diagnóstico copiado.");}));
+  box.addView(button("Tentar novamente",()->recreate()));
+  ScrollView scroll=new ScrollView(this);scroll.addView(box);setContentView(scroll);
  }
  void immersive(){WindowInsetsController controller=getWindow().getInsetsController();if(controller==null)return;controller.hide(WindowInsets.Type.statusBars()|WindowInsets.Type.navigationBars());controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);}
  void start(){started=true;world.paused=false;hud.invalidate();}
@@ -17,7 +32,7 @@ public final class MainActivity extends Activity {
  @Override protected void onResume(){super.onResume();resumed=true;if(world!=null){world.onResume();world.paused=!started||active!=null;}immersive();}
  @Override protected void onPause(){resumed=false;save();if(world!=null){world.paused=true;world.moveX=world.moveZ=0;world.onPause();}super.onPause();}
  @Override protected void onDestroy(){if(world!=null)world.close();if(director!=null)director.close();if(tones!=null)tones.release();super.onDestroy();}
- @Override public void onBackPressed(){if(active!=null)active.dismiss();else pauseMenu();}
+ @Override public void onBackPressed(){if(active!=null)active.dismiss();else if(world!=null&&hud!=null)pauseMenu();else finish();}
  void play(boolean success){if(sound&&tones!=null)tones.startTone(success?ToneGenerator.TONE_PROP_ACK:ToneGenerator.TONE_PROP_BEEP,150);}
  void message(String s){lastMessage=s;Toast.makeText(this,s,Toast.LENGTH_LONG).show();}
  int dp(float x){return (int)(getResources().getDisplayMetrics().density*x+.5f);}

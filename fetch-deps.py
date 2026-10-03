@@ -14,7 +14,8 @@ version='0.17.1'
 aar=download(p/'litertlm.aar',f'https://dl.google.com/dl/android/maven2/com/google/ai/edge/litertlm/litertlm-android/{version}/litertlm-android-{version}.aar')
 with zipfile.ZipFile(aar) as z:
  (p/'litertlm.jar').write_bytes(z.read('classes.jar'))
- f=p/'jni/arm64-v8a/liblitertlm_jni.so';f.parent.mkdir(parents=True,exist_ok=True);f.write_bytes(z.read('jni/arm64-v8a/liblitertlm_jni.so'))
+ for abi in ['arm64-v8a','x86_64']:
+  f=p/f'jni/{abi}/liblitertlm_jni.so';f.parent.mkdir(parents=True,exist_ok=True);f.write_bytes(z.read(f'jni/{abi}/liblitertlm_jni.so'))
  (p/'LiteRT-LM-LICENSE.txt').write_bytes(z.read('LICENSE'))
  (p/'THIRD_PARTY_NOTICE.txt').write_bytes(z.read('THIRD_PARTY_NOTICE.txt'))
 download(p/'r8-tool.jar','https://dl.google.com/dl/android/maven2/com/android/tools/r8/9.4.28/r8-9.4.28.jar')

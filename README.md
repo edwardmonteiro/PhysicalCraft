@@ -2,11 +2,11 @@
 
 **Explore. Experimente. Descubra.** Um jogo Android local de exploração e mistérios de física.
 
-[Baixar APK](https://github.com/edwardmonteiro/PhysicalCraft/releases/download/v0.1.0/PhysicalCraft-v0.1.0.apk) · [Builds](https://github.com/edwardmonteiro/PhysicalCraft/actions/workflows/android.yml)
+[Baixar APK](https://github.com/edwardmonteiro/PhysicalCraft/releases/download/v0.1.1/PhysicalCraft-v0.1.1.apk) · [Builds](https://github.com/edwardmonteiro/PhysicalCraft/actions/workflows/android.yml)
 
 ## Jogar no celular
 
-1. Instale `PhysicalCraft-v0.1.0.apk` da página Releases. Requer Android 12+ e ARM64.
+1. Instale `PhysicalCraft-v0.1.1.apk` da página Releases. Requer Android 12+ e ARM64.
 2. Comece a expedição. Use o controle esquerdo para andar e arraste à direita para olhar.
 3. Siga a coluna verde até a ruína. Perto dela, toque em **Investigar ruína**.
 4. Leia o objetivo, ajuste o instrumento e execute. A simulação mede o resultado.
@@ -98,3 +98,7 @@ A chave em `.dev/` é **privada e somente de desenvolvimento**, mantida fora do 
 - [Gemma 3 1B LiteRT](https://huggingface.co/litert-community/Gemma3-1B-IT), pesos sob licença Gemma, não redistribuídos aqui.
 - Runtime Kotlin, coroutines e Gson: suas licenças e avisos estão nos JARs e em `THIRD_PARTY.md`.
 - Terreno, renderizador, interface, ícone e regras desta versão são implementações do PhysicalCraft. Não é um fork de Cubes/Kubi/Craft.
+
+### Correção 0.1.1
+
+O pipeline agora exige inicialização e renderização em Android 12 emulado antes da publicação. Há diagnóstico local copiável para falhas de inicialização; nada é enviado automaticamente. Se o app fechar inesperadamente, abra novamente para ver o diagnóstico.

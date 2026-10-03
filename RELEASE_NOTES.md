@@ -1,5 +1,9 @@
-Primeiro protótipo jogável do PhysicalCraft para Android 12+, ARM64.
+# PhysicalCraft 0.1.1
 
-Mundo 3D procedural local, ruínas, alterações de terreno e progresso salvo. Treze temas físicos com instrumentos e simulações 2D. Importação de Gemma 3 1B `.litertlm` para gerar e implantar narrativas, parâmetros e ambientes offline. Pesos baixados separadamente pelo usuário.
+Correção de compatibilidade na abertura do mundo:
+- Shaders OpenGL ES 2 usam a mesma precisão na passagem de dados entre etapas.
+- Seleção de superfície gráfica aceita RGB e RGBA, com alternativa RGB565.
+- Falhas de inicialização exibem diagnóstico copiável; falhas não tratadas são registradas somente no celular e mostradas na próxima abertura.
+- Teste automatizado instala e executa o app em Android 12, verifica quadros renderizados, abre experimento e menu Gemma, salva e reabre antes de publicar.
 
-Compilação e assinatura verificadas; testes matemáticos e de contratos passaram. Ainda requer validação no aparelho, inclusive inferência Gemma. APK assinado com certificado de desenvolvimento. Veja README para controles, importação do modelo e limitações.
+Ainda é um protótipo. O emulador não substitui validação em cada GPU de celular. A inferência Gemma precisa ser testada separadamente com um modelo importado.

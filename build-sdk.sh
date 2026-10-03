@@ -22,13 +22,14 @@ for f in deps/*.jar; do [[ "$f" == *r8-tool.jar ]] || LIBS+=("$f"); done
 java -Xmx2g -cp deps/r8-tool.jar com.android.tools.r8.D8 --release --min-api 31 --lib "$ANDROID_JAR" --output build/dex build/classes.jar "${LIBS[@]}"
 python3 - <<'PY'
 from pathlib import Path
-import zipfile,shutil
+import zipfile,shutil,os
 shutil.copyfile('build/resources.apk','build/unsigned.apk')
 with zipfile.ZipFile('build/unsigned.apk','a',zipfile.ZIP_DEFLATED) as z:
  for f in Path('app/src/main/assets').rglob('*'):
   if f.is_file():z.write(f,'assets/'+str(f.relative_to('app/src/main/assets')))
  for f in Path('build/dex').glob('*.dex'):z.write(f,f.name)
- for f in Path('deps/jni/arm64-v8a').glob('*.so'):z.write(f,'lib/arm64-v8a/'+f.name)
+ abi=os.environ.get('PHYSICALCRAFT_ABI','arm64-v8a')
+ for f in Path('deps/jni',abi).glob('*.so'):z.write(f,'lib/'+abi+'/'+f.name)
  z.write('deps/LiteRT-LM-LICENSE.txt','assets/licenses/LiteRT-LM-LICENSE.txt')
  z.write('deps/THIRD_PARTY_NOTICE.txt','assets/licenses/THIRD_PARTY_NOTICE.txt')
 PY
@@ -39,5 +40,5 @@ if [[ -z "${PHYSICALCRAFT_KEYSTORE:-}" && ! -f .dev/physicalcraft-debug.keystore
  mkdir -p .dev
  keytool -genkeypair -keystore .dev/physicalcraft-debug.keystore -storepass android -keypass android -alias physicalcraft -dname 'CN=PhysicalCraft Development, O=PhysicalCraft, C=BR' -keyalg RSA -keysize 2048 -validity 10000
 fi
-"$ANDROID_BUILD_TOOLS/apksigner" sign --ks "${PHYSICALCRAFT_KEYSTORE:-.dev/physicalcraft-debug.keystore}" --ks-key-alias "${PHYSICALCRAFT_KEY_ALIAS:-physicalcraft}" --ks-pass "${PHYSICALCRAFT_KEY_PASS:-pass:android}" --out releases/PhysicalCraft-v0.1.0.apk build/aligned.apk
-"$ANDROID_BUILD_TOOLS/apksigner" verify --verbose releases/PhysicalCraft-v0.1.0.apk
+"$ANDROID_BUILD_TOOLS/apksigner" sign --ks "${PHYSICALCRAFT_KEYSTORE:-.dev/physicalcraft-debug.keystore}" --ks-key-alias "${PHYSICALCRAFT_KEY_ALIAS:-physicalcraft}" --ks-pass "${PHYSICALCRAFT_KEY_PASS:-pass:android}" --out releases/PhysicalCraft-v0.1.1.apk build/aligned.apk
+"$ANDROID_BUILD_TOOLS/apksigner" verify --verbose releases/PhysicalCraft-v0.1.1.apk
