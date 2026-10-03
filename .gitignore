@@ -1,0 +1,17 @@
+build/
+.gradle/
+local.properties
+*.log
+
+.dev/
+*.keystore
+*.jks
+*.pass
+
+deps/*.jar
+deps/*.aar
+deps/jni/
+deps/THIRD_PARTY_NOTICE.txt
+tests/*.jar
+releases/*.apk
+releases/*.idsig
