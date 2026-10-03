@@ -87,7 +87,7 @@ A chave em `.dev/` é **privada e somente de desenvolvimento**, mantida fora do 
 - Compilação Java/DEX e empacotamento ARM64 concluídos; assinatura APK verificada.
 - Testes de referência para as 13 equações, 5.200 missões alcançáveis, persistência de blueprint e rejeição de contratos inválidos.
 - Testes de continuidade e limites de terreno em 65.536 coordenadas.
-- **Não executado em dispositivo Android ou emulador nesta sessão.** FPS, UX real e inferência Gemma exigem teste no aparelho.
+- **v0.1.1 executada em Android 12 (API 31) emulado:** abertura, pelo menos 30 quadros renderizados, experimento, menu Gemma, salvamento e reabertura aprovados no [teste automatizado](https://github.com/edwardmonteiro/PhysicalCraft/actions/runs/37159945835). FPS, UX em celulares físicos e inferência Gemma ainda exigem teste no aparelho.
 - Cavernas, água física, inventário de materiais, física de corpos rígidos 3D, multijogador e criação arbitrária de mecânicas por IA não fazem parte da v0.1.
 - Árvores e monumentos são decoração; a colisão atual é com o terreno. Modelos podem falhar por incompatibilidade ou memória disponível.
 
