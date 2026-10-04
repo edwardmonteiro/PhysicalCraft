@@ -2,11 +2,11 @@
 
 **Explore. Experimente. Descubra.** Um jogo Android local de exploração e mistérios de física.
 
-[Baixar APK](https://github.com/edwardmonteiro/PhysicalCraft/releases/download/v0.1.1/PhysicalCraft-v0.1.1.apk) · [Builds](https://github.com/edwardmonteiro/PhysicalCraft/actions/workflows/android.yml)
+[Baixar APK](https://github.com/edwardmonteiro/PhysicalCraft/releases/download/v0.2.0/PhysicalCraft-v0.2.0.apk) · [Builds](https://github.com/edwardmonteiro/PhysicalCraft/actions/workflows/android.yml)
 
 ## Jogar no celular
 
-1. Instale `PhysicalCraft-v0.1.1.apk` da página Releases. Requer Android 12+ e ARM64.
+1. Instale `PhysicalCraft-v0.2.0.apk` da página Releases. Requer Android 12+ e ARM64.
 2. Comece a expedição. Use o controle esquerdo para andar e arraste à direita para olhar.
 3. Siga a coluna verde até a ruína. Perto dela, toque em **Investigar ruína**.
 4. Leia o objetivo, ajuste o instrumento e execute. A simulação mede o resultado.
@@ -28,7 +28,24 @@
 - Geração automática após uma descoberta quando o modelo está instalado e a opção está ligada.
 - Nome e ícone próprios; interface paisagem com margens para recorte e barras do sistema.
 
-## Gemma: instalar uma vez, gerar offline
+## IA local: download direto
+
+Abra **IA local → Baixar IA · Qwen 1.5B**. O arquivo tem 1.598 MB (1,60 GB); reserve 3,4 GB livres para baixar e copiar. O DownloadManager do Android mantém o download em segundo plano. Ao voltar ao jogo, ele verifica tamanho e SHA-256 e inicializa o runtime antes de substituir qualquer modelo anterior. Falhas preservam o modelo instalado. É possível cancelar a transferência e tentar novamente.
+
+Modelo: [Qwen 2.5 1.5B LiteRT-LM](https://huggingface.co/litert-community/Qwen2.5-1.5B-Instruct), revisão fixa `19edb84c69a0212f29a6ef17ba0d6f278b6a1614`, variante CPU q8. Sem cadastro. A geração pode ser lenta em CPU; respostas inválidas não substituem a missão.
+
+## Personagem, câmera e equipamentos
+
+- Câmera em terceira pessoa, atrás e acima do personagem; arraste à direita para girar.
+- Menu permite ajustar distância e alternar para primeira pessoa.
+- Personagem animado com mochila; começa com espada e picareta.
+- Toque **Espada → GOLPE** perto de um sentinela dourado. Três acertos desativam um alvo básico e rendem um cristal.
+- Sentinelas são alvos de treino não hostis. Eles não atacam; não há campanha de combate nesta versão.
+- **Picareta → MINERAR** retira terreno à frente; **+ bloco** constrói.
+- **◆** abre a mochila. Três cristais melhoram a espada, até o nível 3.
+- Equipamentos, cristais e alvos desativados são salvos no celular. Cada nova ruína tem novos alvos.
+
+## Gemma: importação opcional
 
 O APK inclui o runtime LiteRT-LM, mas **não inclui os pesos do Gemma**.
 
@@ -39,7 +56,7 @@ O APK inclui o runtime LiteRT-LM, mas **não inclui os pesos do Gemma**.
 5. Aguarde a cópia e a inicialização de validação. Só então o modelo substitui o anterior.
 6. Use **Gerar e implantar novo mistério**, ou avance com geração automática ativada.
 
-A aplicação não tem permissão de internet. O download inicial ocorre no navegador. Após a importação, inferência, geração, mundo e progresso são locais. Modelos `.task`/`.gguf` não são aceitos por este runtime.
+A permissão de internet é usada para baixar o modelo público. Inferência, geração, mundo e progresso continuam locais; não há API de IA remota nem envio de partidas. Para Gemma, o download exige autorização no Hugging Face e importação manual. Modelos `.task`/`.gguf` não são aceitos por este runtime.
 
 Modelos pequenos podem emitir JSON inválido ou histórias incoerentes. Uma saída inválida preserva a missão atual e mostra um aviso. As equações, respostas e limites vêm do código, nunca da saída do modelo. A validação garante o domínio numérico e uma solução alcançável; não garante a qualidade pedagógica da prosa gerada. A geração pode levar tempo no CPU. O runtime é liberado após cada geração para devolver memória ao jogo.
 
@@ -80,6 +97,8 @@ python3 fetch-deps.py
 ./build-sdk.sh
 ```
 
+A chave de assinatura local anterior foi removida pela manutenção do ambiente. A versão 0.2.0 usa uma nova assinatura de desenvolvimento. O Android poderá exigir desinstalar a versão antiga; isso apaga o progresso e modelos internos. Não prometa atualização direta entre essas assinaturas.
+
 A chave em `.dev/` é **privada e somente de desenvolvimento**, mantida fora do Git. O CI gera uma chave temporária por execução quando uma chave estável não é fornecida. APKs com assinaturas diferentes não atualizam a mesma instalação. Antes de distribuir atualizações contínuas, configure uma chave estável como segredo privado de CI. Para distribuição de produção, use chave privada externa via `PHYSICALCRAFT_KEYSTORE`, `PHYSICALCRAFT_KEY_ALIAS`, `PHYSICALCRAFT_KEY_PASS` (sintaxe apksigner `file:/caminho/segredo`, por exemplo). Nunca coloque chaves de produção neste repositório.
 
 ## Validação e limites desta entrega
@@ -102,3 +121,5 @@ A chave em `.dev/` é **privada e somente de desenvolvimento**, mantida fora do 
 ### Correção 0.1.1
 
 O pipeline agora exige inicialização e renderização em Android 12 emulado antes da publicação. Há diagnóstico local copiável para falhas de inicialização; nada é enviado automaticamente. Se o app fechar inesperadamente, abra novamente para ver o diagnóstico.
+
+A versão 0.2.0 acrescenta testes de alcance, direção e intervalo entre golpes, recompensas e melhorias. O pipeline exige também baixar a IA, validar seu hash, inicializar o runtime e gerar uma missão válida no Android emulado antes de publicar.

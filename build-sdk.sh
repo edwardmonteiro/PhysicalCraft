@@ -40,5 +40,5 @@ if [[ -z "${PHYSICALCRAFT_KEYSTORE:-}" && ! -f .dev/physicalcraft-debug.keystore
  mkdir -p .dev
  keytool -genkeypair -keystore .dev/physicalcraft-debug.keystore -storepass android -keypass android -alias physicalcraft -dname 'CN=PhysicalCraft Development, O=PhysicalCraft, C=BR' -keyalg RSA -keysize 2048 -validity 10000
 fi
-"$ANDROID_BUILD_TOOLS/apksigner" sign --ks "${PHYSICALCRAFT_KEYSTORE:-.dev/physicalcraft-debug.keystore}" --ks-key-alias "${PHYSICALCRAFT_KEY_ALIAS:-physicalcraft}" --ks-pass "${PHYSICALCRAFT_KEY_PASS:-pass:android}" --out releases/PhysicalCraft-v0.1.1.apk build/aligned.apk
-"$ANDROID_BUILD_TOOLS/apksigner" verify --verbose releases/PhysicalCraft-v0.1.1.apk
+"$ANDROID_BUILD_TOOLS/apksigner" sign --ks "${PHYSICALCRAFT_KEYSTORE:-.dev/physicalcraft-debug.keystore}" --ks-key-alias "${PHYSICALCRAFT_KEY_ALIAS:-physicalcraft}" --ks-pass "${PHYSICALCRAFT_KEY_PASS:-pass:android}" --out releases/PhysicalCraft-v0.2.0.apk build/aligned.apk
+"$ANDROID_BUILD_TOOLS/apksigner" verify --verbose releases/PhysicalCraft-v0.2.0.apk

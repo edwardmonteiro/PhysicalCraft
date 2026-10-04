@@ -14,11 +14,11 @@ with zipfile.ZipFile('build/smoke/unsigned.apk','a',zipfile.ZIP_DEFLATED) as z:z
 PY
 "$ANDROID_BUILD_TOOLS/zipalign" -f 4 build/smoke/unsigned.apk build/smoke/aligned.apk
 "$ANDROID_BUILD_TOOLS/apksigner" sign --ks .dev/physicalcraft-debug.keystore --ks-key-alias physicalcraft --ks-pass pass:android --out build/smoke/test.apk build/smoke/aligned.apk
-adb install -r releases/PhysicalCraft-v0.1.1.apk
+adb install -r releases/PhysicalCraft-v0.2.0.apk
 adb install -r build/smoke/test.apk
 adb logcat -c
 adb shell am instrument -w com.edward.physicalcraft.smoke/com.edward.physicalcraft.StartupTest | tee build/smoke/result.txt
 adb logcat -d > build/smoke/logcat.txt
-adb exec-out screencap -p > build/smoke/screen.png
+adb pull /sdcard/Android/data/com.edward.physicalcraft/files/preview.png build/smoke/screen.png
 grep -q PHYSICALCRAFT_STARTUP_PASS build/smoke/result.txt
 if grep -E 'FATAL EXCEPTION|Fatal signal' build/smoke/logcat.txt; then exit 1; fi

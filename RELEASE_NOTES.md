@@ -1,9 +1,12 @@
-# PhysicalCraft 0.1.1
+# PhysicalCraft 0.2.0 · Explorador
 
-Correção de compatibilidade na abertura do mundo:
-- Shaders OpenGL ES 2 usam a mesma precisão na passagem de dados entre etapas.
-- Seleção de superfície gráfica aceita RGB e RGBA, com alternativa RGB565.
-- Falhas de inicialização exibem diagnóstico copiável; falhas não tratadas são registradas somente no celular e mostradas na próxima abertura.
-- Teste automatizado instala e executa o app em Android 12, verifica quadros renderizados, abre experimento e menu Gemma, salva e reabre antes de publicar.
+- Personagem em terceira pessoa, visto de trás e de cima, com câmera ajustável.
+- Espada inicial, picareta, mochila e sentinelas dourados de treino.
+- Golpes animados, alcance e intervalo entre ataques, cristais e melhoria da espada.
+- Progresso de equipamentos e alvos salvo localmente.
+- Download direto do Qwen 2.5 1.5B: 1,60 GB, sem cadastro, com progresso e cancelamento.
+- Download em segundo plano pelo Android, verificação SHA-256 e validação do runtime.
+- Gemma 1B continua opcional por importação após autorização no Hugging Face.
+- Inferência e jogo offline após instalar o modelo. Nenhuma chamada a IA remota.
 
-Ainda é um protótipo. O emulador não substitui validação em cada GPU de celular. A inferência Gemma precisa ser testada separadamente com um modelo importado.
+Atenção: esta versão usa outra assinatura de desenvolvimento. Se o Android bloquear a atualização, a reinstalação apaga os dados locais antigos.

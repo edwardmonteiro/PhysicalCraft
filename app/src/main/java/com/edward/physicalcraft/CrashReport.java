@@ -20,7 +20,7 @@ public final class CrashReport extends Application {
  }
  static String describe(Throwable error){
   StringWriter trace=new StringWriter();error.printStackTrace(new PrintWriter(trace));
-  String text="PhysicalCraft 0.1.1\n"+Build.MANUFACTURER+" "+Build.MODEL+" · Android "+Build.VERSION.RELEASE+" (API "+Build.VERSION.SDK_INT+")\n"+trace;
+  String text="PhysicalCraft 0.2.0\n"+Build.MANUFACTURER+" "+Build.MODEL+" · Android "+Build.VERSION.RELEASE+" (API "+Build.VERSION.SDK_INT+")\n"+trace;
   return text.substring(0,Math.min(12000,text.length()));
  }
  static String take(Context context){
