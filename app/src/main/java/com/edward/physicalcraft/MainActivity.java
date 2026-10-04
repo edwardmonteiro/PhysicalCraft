@@ -69,8 +69,8 @@ public final class MainActivity extends Activity {
   aiStatus=text(download.status.isEmpty()?(director.ready()?director.modelName()+" · instalada":"Nenhuma IA instalada"):download.status,19,MINT);p.addView(aiStatus);
   p.addView(text("Baixe uma vez. Depois, a IA cria mistérios sem internet. Suas partidas e seus pedidos não são enviados a servidores.",17,TEXT));
   if(download.active()){p.addView(button("Cancelar download",()->{download.cancel();gemmaMenu();}));}
-  else p.addView(button("Baixar IA · Qwen 1.5B · 1,60 GB",()->{if(director.busy){message("Aguarde a IA terminar.");return;}try{download.start();gemmaMenu();}catch(RuntimeException e){message(e.getMessage());}}));
-  p.addView(text("Sem cadastro. Reserve 3,4 GB livres para a instalação. O Android continua o download em segundo plano. Use Wi-Fi para evitar gastar seu pacote de dados.",15,MUTED));
+  else p.addView(button("Baixar IA · Qwen 0.6B · 347 MB",()->{if(director.busy){message("Aguarde a IA terminar.");return;}try{download.start();gemmaMenu();}catch(RuntimeException e){message(e.getMessage());}}));
+  p.addView(text("Sem cadastro. Reserve 1,6 GB livres para a instalação. O Android continua o download em segundo plano. Use Wi-Fi para evitar gastar seu pacote de dados.",15,MUTED));
   if(director.ready())p.addView(button(director.busy?"IA trabalhando…":"Gerar e implantar mistério",()->generate(true)));
   p.addView(button(autoGemma?"Novos mistérios automáticos: ligados":"Novos mistérios automáticos: desligados",()->{autoGemma=!autoGemma;save();gemmaMenu();}));
   p.addView(text("Prefere Gemma? O provedor exige login e aceite da licença. Baixe gemma3-1b-it-int4.litertlm e importe abaixo. Apenas abrir a página não instala o modelo.",15,MUTED));

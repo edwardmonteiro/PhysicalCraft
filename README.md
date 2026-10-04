@@ -30,9 +30,9 @@
 
 ## IA local: download direto
 
-Abra **IA local → Baixar IA · Qwen 1.5B**. O arquivo tem 1.598 MB (1,60 GB); reserve 3,4 GB livres para baixar e copiar. O DownloadManager do Android mantém o download em segundo plano. Ao voltar ao jogo, ele verifica tamanho e SHA-256 e inicializa o runtime antes de substituir qualquer modelo anterior. Falhas preservam o modelo instalado. É possível cancelar a transferência e tentar novamente.
+Abra **IA local → Baixar IA · Qwen 1.5B**. O arquivo tem 1.598 MB (347 MB); reserve 1,6 GB livres para baixar e copiar. O DownloadManager do Android mantém o download em segundo plano. Ao voltar ao jogo, ele verifica tamanho e SHA-256 e inicializa o runtime antes de substituir qualquer modelo anterior. Falhas preservam o modelo instalado. É possível cancelar a transferência e tentar novamente.
 
-Modelo: [Qwen 2.5 1.5B LiteRT-LM](https://huggingface.co/litert-community/Qwen2.5-1.5B-Instruct), revisão fixa `19edb84c69a0212f29a6ef17ba0d6f278b6a1614`, variante CPU q8. Sem cadastro. A geração pode ser lenta em CPU; respostas inválidas não substituem a missão.
+Modelo: [Qwen 3 0.6B LiteRT-LM](https://huggingface.co/litert-community/Qwen2.5-1.5B-Instruct), revisão fixa `19edb84c69a0212f29a6ef17ba0d6f278b6a1614`, variante CPU q8. Sem cadastro. A geração pode ser lenta em CPU; respostas inválidas não substituem a missão.
 
 ## Personagem, câmera e equipamentos
 
@@ -122,6 +122,6 @@ A chave em `.dev/` é **privada e somente de desenvolvimento**, mantida fora do 
 
 O pipeline agora exige inicialização e renderização em Android 12 emulado antes da publicação. Há diagnóstico local copiável para falhas de inicialização; nada é enviado automaticamente. Se o app fechar inesperadamente, abra novamente para ver o diagnóstico.
 
-A versão 0.2.0 acrescenta testes de alcance, direção e intervalo entre golpes, recompensas e melhorias. Alterações no runtime, no downloader, no contrato de fases ou nas dependências exigem validar o hash de um modelo real, inicializar o runtime e gerar uma missão válida no Android emulado. O modelo de teste é baixado no host do CI e transferido ao emulador, evitando o limite de tempo da rede virtualizada. O DownloadManager completou uma transferência real com o hash correto no teste de 04/out/2026; a falha descoberta na extensão temporária foi corrigida. Esse teste completo também pode ser acionado manualmente em Actions; alterações apenas visuais continuam passando pelos testes de abertura, golpes e persistência.
+A versão 0.2.0 acrescenta testes de alcance, direção e intervalo entre golpes, recompensas e melhorias. Alterações no runtime, no downloader, no contrato de fases ou nas dependências exigem validar o hash de um modelo real, inicializar o runtime e gerar uma missão válida no Android emulado. O modelo de teste é baixado no host do CI e transferido ao emulador, evitando o limite de tempo da rede virtualizada. O DownloadManager completou uma transferência real do modelo Qwen anterior com o hash correto no teste de 04/out/2026; a falha descoberta na extensão temporária foi corrigida. Esse teste completo também pode ser acionado manualmente em Actions; alterações apenas visuais continuam passando pelos testes de abertura, golpes e persistência.
 
 As próximas entregas de APK nesta conversa reutilizarão a chave privada de desenvolvimento criada para 0.2.0. Essa chave não está no Git. Os APKs publicados pelo CI continuam usando a assinatura temporária descrita acima.

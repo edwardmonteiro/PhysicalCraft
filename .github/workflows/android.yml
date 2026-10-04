@@ -52,7 +52,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .ci-model/qwen.litertlm
-          key: qwen-litert-faa60663b333290c1496c499828b21d3e3254a788cacd8cce917ce0f761a2dc9
+          key: qwen-litert-2df6821ec12702dafd33915e7a1a1adc7c4b053f3672fd9555dfaf3a114c4139
       - name: Prepare verified model fixture
         if: env.PHYSICALCRAFT_AI_TEST == 'true'
         run: python3 tests/fetch-model.py

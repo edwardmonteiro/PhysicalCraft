@@ -9,10 +9,10 @@ import java.io.File;
 
 /** Android owns the transfer, including background progress and network retries. */
 public final class ModelDownload {
- public static final String NAME="Qwen 2.5 1.5B";
- public static final long BYTES=1597931520L;
- public static final String SHA256="faa60663b333290c1496c499828b21d3e3254a788cacd8cce917ce0f761a2dc9";
- public static final String URL="https://huggingface.co/litert-community/Qwen2.5-1.5B-Instruct/resolve/19edb84c69a0212f29a6ef17ba0d6f278b6a1614/Qwen2.5-1.5B-Instruct_multi-prefill-seq_q8_ekv4096.litertlm";
+ public static final String NAME="Qwen 3 0.6B";
+ public static final long BYTES=347251840L;
+ public static final String SHA256="2df6821ec12702dafd33915e7a1a1adc7c4b053f3672fd9555dfaf3a114c4139";
+ public static final String URL="https://huggingface.co/litert-community/Qwen3-0.6B-int4/resolve/6aa2daf8aba4aa456797fb8040b36a3948bcfda7/qwen3_0.6b_nothink_q4_block32_ekv1280.litertlm";
  private final Context context;private final DownloadManager manager;private final SharedPreferences prefs;
  public volatile String status="";private volatile boolean installing;
  private static ModelDownload instance;
@@ -22,8 +22,8 @@ public final class ModelDownload {
  public synchronized void start(){
   if(active())return;
   File folder=context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-  if(folder==null||folder.getUsableSpace()<BYTES*2+200_000_000L)throw new IllegalStateException("Reserve 3,4 GB livres para baixar e instalar a IA.");
-  DownloadManager.Request request=new DownloadManager.Request(Uri.parse(URL)).setTitle("PhysicalCraft · IA local").setDescription("Qwen 2.5 1.5B · 1,60 GB").setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE).setAllowedOverRoaming(false).setDestinationInExternalFilesDir(context,Environment.DIRECTORY_DOWNLOADS,"qwen-"+System.currentTimeMillis()+".litertlm");
+  if(folder==null||folder.getUsableSpace()<1_600_000_000L)throw new IllegalStateException("Reserve 1,6 GB livres para baixar e instalar a IA.");
+  DownloadManager.Request request=new DownloadManager.Request(Uri.parse(URL)).setTitle("PhysicalCraft · IA local").setDescription("Qwen 3 0.6B · 347 MB").setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE).setAllowedOverRoaming(false).setDestinationInExternalFilesDir(context,Environment.DIRECTORY_DOWNLOADS,"qwen-"+System.currentTimeMillis()+".litertlm");
   long id=manager.enqueue(request);prefs.edit().putLong("id",id).apply();status="Iniciando download…";
  }
  public synchronized void cancel(){long id=prefs.getLong("id",-1);if(id>=0&&!installing){manager.remove(id);prefs.edit().remove("id").apply();status="Download cancelado. A IA instalada foi preservada.";}}
@@ -38,7 +38,7 @@ public final class ModelDownload {
     installing=true;status="Download completo · verificando e preparando a IA…";
     director.importModel(uri,NAME,SHA256,BYTES,error->{installing=false;manager.remove(id);prefs.edit().remove("id").apply();status=error==null?"IA pronta. Toque em Gerar mistério.":error;changed.run();});
    }else if(state==DownloadManager.STATUS_FAILED){int reason=c.getInt(c.getColumnIndexOrThrow(DownloadManager.COLUMN_REASON));manager.remove(id);prefs.edit().remove("id").apply();status="Download falhou ("+reason+"). Verifique a conexão e o espaço e tente novamente.";}
-   else status=(state==DownloadManager.STATUS_PAUSED?"Aguardando conexão · ":"Baixando IA · ")+Math.max(0,bytes)*100/BYTES+"% · "+Math.max(0,bytes)/1_000_000+" / 1598 MB";
+   else status=(state==DownloadManager.STATUS_PAUSED?"Aguardando conexão · ":"Baixando IA · ")+Math.max(0,bytes)*100/BYTES+"% · "+Math.max(0,bytes)/1_000_000+" / 347 MB";
   }catch(RuntimeException error){status="Não foi possível consultar o download. Tente novamente.";}
  }
 }
