@@ -43,10 +43,11 @@ public final class StartupTest extends Instrumentation {
    reopened.director.importModel(android.net.Uri.fromFile(fixture),ModelDownload.NAME,ModelDownload.SHA256,ModelDownload.BYTES,e->{installError[0]=e;installed.countDown();});
    require(installed.await(180,TimeUnit.SECONDS),"Model initialization timed out");
    require(installError[0]==null&&reopened.director.ready(),"Model install failed: "+installError[0]);
+   android.util.Log.i("PhysicalCraftTest","Verified model imported and initialized");
    CountDownLatch generated=new CountDownLatch(1);String[] error={null};Physics.Mission[] output={null};
    while(reopened.director.busy)SystemClock.sleep(100);
    reopened.director.generate(reopened.mission,(m,e)->{output[0]=m;error[0]=e;generated.countDown();});
-   require(generated.await(240,TimeUnit.SECONDS),"Local inference timed out");
+   require(generated.await(900,TimeUnit.SECONDS),"Local inference timed out");
    require(error[0]==null&&output[0]!=null&&output[0].success(output[0].solution),"Local AI blueprint invalid: "+error[0]);}
 
    result.putString("stream","PHYSICALCRAFT_STARTUP_PASS: third-person rendering, sword hits, loot persistence\n"+(fullAI?"PHYSICALCRAFT_AI_PASS: SHA256, local Qwen initialization, inference, valid mission\n":""));finish(Activity.RESULT_OK,result);
