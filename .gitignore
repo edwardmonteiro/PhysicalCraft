@@ -15,3 +15,5 @@ deps/THIRD_PARTY_NOTICE.txt
 tests/*.jar
 releases/*.apk
 releases/*.idsig
+
+.ci-model/

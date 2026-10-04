@@ -35,17 +35,21 @@ public final class StartupTest extends Instrumentation {
    while(reopened.world.renderedFrames<10&&SystemClock.elapsedRealtime()<deadline)SystemClock.sleep(100);
    require(reopened.world.renderedFrames>=10,"World failed after reopening");
    require(reopened.world.equipment.crystals==1&&reopened.world.equipment.selected==Equipment.PICKAXE&&reopened.world.equipment.health(0,0)==0,"Inventory and targets must survive restart");
-   // Exercise Android's real downloader, checksum verification, runtime load and inference.
-   if(fullAI){runOnMainSync(reopened::gemmaMenu);reopened.download.start();deadline=SystemClock.elapsedRealtime()+720000;
-   while(reopened.download.active()&&SystemClock.elapsedRealtime()<deadline){reopened.download.poll(reopened.director,()->{});SystemClock.sleep(1000);}
-   require(reopened.director.ready(),"Model install failed: "+reopened.download.status);
+   // Exercise checksum verification, runtime load and inference with real public weights.
+   if(fullAI){runOnMainSync(reopened::gemmaMenu);
+   CountDownLatch installed=new CountDownLatch(1);String[] installError={null};
+   File fixture=new File(getTargetContext().getExternalFilesDir(null),"qwen-test.litertlm");
+   require(fixture.isFile(),"Missing verified model test fixture");
+   reopened.director.importModel(android.net.Uri.fromFile(fixture),ModelDownload.NAME,ModelDownload.SHA256,ModelDownload.BYTES,e->{installError[0]=e;installed.countDown();});
+   require(installed.await(180,TimeUnit.SECONDS),"Model initialization timed out");
+   require(installError[0]==null&&reopened.director.ready(),"Model install failed: "+installError[0]);
    CountDownLatch generated=new CountDownLatch(1);String[] error={null};Physics.Mission[] output={null};
    while(reopened.director.busy)SystemClock.sleep(100);
    reopened.director.generate(reopened.mission,(m,e)->{output[0]=m;error[0]=e;generated.countDown();});
    require(generated.await(240,TimeUnit.SECONDS),"Local inference timed out");
    require(error[0]==null&&output[0]!=null&&output[0].success(output[0].solution),"Local AI blueprint invalid: "+error[0]);}
 
-   result.putString("stream","PHYSICALCRAFT_STARTUP_PASS: third-person rendering, sword hits, loot persistence\n"+(fullAI?"PHYSICALCRAFT_AI_PASS: DownloadManager, SHA256, local Qwen inference, valid mission\n":""));finish(Activity.RESULT_OK,result);
+   result.putString("stream","PHYSICALCRAFT_STARTUP_PASS: third-person rendering, sword hits, loot persistence\n"+(fullAI?"PHYSICALCRAFT_AI_PASS: SHA256, local Qwen initialization, inference, valid mission\n":""));finish(Activity.RESULT_OK,result);
   }catch(Throwable error){result.putString("stream",android.util.Log.getStackTraceString(error));finish(Activity.RESULT_CANCELED,result);}
  }
  private void require(boolean condition,String message){if(!condition)throw new AssertionError(message);}

@@ -28,7 +28,7 @@ jobs:
           python3 - <<'PY'
           import os,subprocess
           changed=subprocess.check_output(['git','diff','--name-only','HEAD^','HEAD'],text=True).splitlines()
-          sensitive=('GemmaDirector.java','ModelDownload.java','Blueprint.java','fetch-deps.py','SHA256SUMS')
+          sensitive=('GemmaDirector.java','ModelDownload.java','Blueprint.java','fetch-deps.py','SHA256SUMS','StartupTest.java')
           full=os.environ.get('MANUAL_AI_TEST')=='true' or any(p.endswith(sensitive) for p in changed)
           with open(os.environ['GITHUB_ENV'],'a') as f:f.write('PHYSICALCRAFT_AI_TEST='+str(full).lower()+'\n')
           print('Full model download and inference test:',full)
@@ -47,6 +47,15 @@ jobs:
         run: python3 fetch-deps.py
       - name: Scientific and blueprint checks
         run: ./test.sh
+      - name: Cache public model test fixture
+        if: env.PHYSICALCRAFT_AI_TEST == 'true'
+        uses: actions/cache@v4
+        with:
+          path: .ci-model/qwen.litertlm
+          key: qwen-litert-faa60663b333290c1496c499828b21d3e3254a788cacd8cce917ce0f761a2dc9
+      - name: Prepare verified model fixture
+        if: env.PHYSICALCRAFT_AI_TEST == 'true'
+        run: python3 tests/fetch-model.py
       - name: Enable emulator acceleration
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules

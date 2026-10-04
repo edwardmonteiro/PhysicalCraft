@@ -17,6 +17,10 @@ PY
 adb install -r releases/PhysicalCraft-v0.2.0.apk
 adb install -r build/smoke/test.apk
 adb shell settings put secure immersive_mode_confirmations confirmed
+if [[ "${PHYSICALCRAFT_AI_TEST:-false}" == true ]]; then
+  adb shell mkdir -p /sdcard/Android/data/com.edward.physicalcraft.explorer/files
+  adb push .ci-model/qwen.litertlm /sdcard/Android/data/com.edward.physicalcraft.explorer/files/qwen-test.litertlm
+fi
 adb logcat -c
 adb shell am instrument -w -e full_ai "${PHYSICALCRAFT_AI_TEST:-false}" com.edward.physicalcraft.smoke/com.edward.physicalcraft.StartupTest | tee build/smoke/result.txt
 adb logcat -d > build/smoke/logcat.txt
