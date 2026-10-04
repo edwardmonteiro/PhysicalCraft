@@ -19,15 +19,15 @@ public final class ModelDownload {
  public static synchronized ModelDownload get(Context c){if(instance==null)instance=new ModelDownload(c);return instance;}
  private ModelDownload(Context c){context=c.getApplicationContext();manager=(DownloadManager)context.getSystemService(Context.DOWNLOAD_SERVICE);prefs=context.getSharedPreferences("model-download",0);}
  public boolean active(){return prefs.getLong("id",-1)>=0;}
- public void start(){
+ public synchronized void start(){
   if(active())return;
   File folder=context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
   if(folder==null||folder.getUsableSpace()<BYTES*2+200_000_000L)throw new IllegalStateException("Reserve 3,4 GB livres para baixar e instalar a IA.");
   DownloadManager.Request request=new DownloadManager.Request(Uri.parse(URL)).setTitle("PhysicalCraft · IA local").setDescription("Qwen 2.5 1.5B · 1,60 GB").setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE).setAllowedOverRoaming(false).setDestinationInExternalFilesDir(context,Environment.DIRECTORY_DOWNLOADS,"qwen-"+System.currentTimeMillis()+".litertlm");
   long id=manager.enqueue(request);prefs.edit().putLong("id",id).apply();status="Iniciando download…";
  }
- public void cancel(){long id=prefs.getLong("id",-1);if(id>=0&&!installing){manager.remove(id);prefs.edit().remove("id").apply();status="Download cancelado. A IA instalada foi preservada.";}}
- public void poll(GemmaDirector director,Runnable changed){
+ public synchronized void cancel(){long id=prefs.getLong("id",-1);if(id>=0&&!installing){manager.remove(id);prefs.edit().remove("id").apply();status="Download cancelado. A IA instalada foi preservada.";}}
+ public synchronized void poll(GemmaDirector director,Runnable changed){
   long id=prefs.getLong("id",-1);if(id<0||installing)return;
   try(Cursor c=manager.query(new DownloadManager.Query().setFilterById(id))){
    if(c==null||!c.moveToFirst()){prefs.edit().remove("id").apply();status="Download não encontrado. Toque em baixar para tentar novamente.";return;}
