@@ -30,9 +30,9 @@
 
 ## IA local: download direto
 
-Abra **IA local → Baixar IA · Qwen 1.5B**. O arquivo tem 1.598 MB (347 MB); reserve 1,6 GB livres para baixar e copiar. O DownloadManager do Android mantém o download em segundo plano. Ao voltar ao jogo, ele verifica tamanho e SHA-256 e inicializa o runtime antes de substituir qualquer modelo anterior. Falhas preservam o modelo instalado. É possível cancelar a transferência e tentar novamente.
+Abra **IA local → Baixar IA · Qwen 0.6B**. O arquivo tem 347 MB; reserve 1,6 GB livres para a instalação e o cache local. O DownloadManager do Android mantém o download em segundo plano. Ao voltar ao jogo, ele verifica tamanho e SHA-256 e inicializa o runtime antes de substituir qualquer modelo anterior. Falhas preservam o modelo instalado. É possível cancelar a transferência e tentar novamente.
 
-Modelo: [Qwen 3 0.6B LiteRT-LM](https://huggingface.co/litert-community/Qwen2.5-1.5B-Instruct), revisão fixa `19edb84c69a0212f29a6ef17ba0d6f278b6a1614`, variante CPU q8. Sem cadastro. A geração pode ser lenta em CPU; respostas inválidas não substituem a missão.
+Modelo: [Qwen 3 0.6B LiteRT-LM](https://huggingface.co/litert-community/Qwen3-0.6B-int4), revisão fixa `6aa2daf8aba4aa456797fb8040b36a3948bcfda7`, variante CPU INT4 sem raciocínio estendido. Sem cadastro. A geração pode ser lenta em CPU; respostas inválidas não substituem a missão.
 
 ## Personagem, câmera e equipamentos
 
@@ -125,3 +125,5 @@ O pipeline agora exige inicialização e renderização em Android 12 emulado an
 A versão 0.2.0 acrescenta testes de alcance, direção e intervalo entre golpes, recompensas e melhorias. Alterações no runtime, no downloader, no contrato de fases ou nas dependências exigem validar o hash de um modelo real, inicializar o runtime e gerar uma missão válida no Android emulado. O modelo de teste é baixado no host do CI e transferido ao emulador, evitando o limite de tempo da rede virtualizada. O DownloadManager completou uma transferência real do modelo Qwen anterior com o hash correto no teste de 04/out/2026; a falha descoberta na extensão temporária foi corrigida. Esse teste completo também pode ser acionado manualmente em Actions; alterações apenas visuais continuam passando pelos testes de abertura, golpes e persistência.
 
 As próximas entregas de APK nesta conversa reutilizarão a chave privada de desenvolvimento criada para 0.2.0. Essa chave não está no Git. Os APKs publicados pelo CI continuam usando a assinatura temporária descrita acima.
+
+Validação de 04/out/2026: [execução 37179962660](https://github.com/edwardmonteiro/PhysicalCraft/actions/runs/37179962660) aprovada. Android 12 emulado abriu e renderizou o mundo, confirmou golpes e persistência do inventário, validou o SHA-256 do Qwen 3 0.6B, inicializou o modelo e gerou uma missão com solução válida. Também passaram 162.293 verificações de física e contrato de fases. O teste completo do modelo usa um arquivo real transferido pelo host; a velocidade no celular depende do aparelho.
