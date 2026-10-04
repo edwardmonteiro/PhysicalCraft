@@ -113,7 +113,7 @@ public final class WorldView extends GLSurfaceView implements GLSurfaceView.Rend
   part(-.47f,1.02f,0,.22f,.62f,.25f,-stride,.17f,.58f,.52f);
   float progress=Math.max(0,Math.min(1,(now-swingAt)/420f)),swing=(float)Math.sin(progress*Math.PI);
   // Right arm and weapon share a shoulder pivot.
-  Matrix.translateM(rig,0,.47f,1.28f,0);Matrix.rotateM(rig,0,-20-swing*105,1,0,0);
+  Matrix.translateM(rig,0,.47f,1.28f,0);Matrix.rotateM(rig,0,20+swing*105,1,0,0);
   part(0,-.26f,0,.22f,.56f,.25f,0,.17f,.58f,.52f);part(0,-.53f,0,.24f,.22f,.25f,0,.87f,.66f,.46f);
   part(0,-.51f,-.20f,.10f,.11f,.45f,0,.38f,.25f,.14f);
   if(equipment.selected==Equipment.SWORD){part(0,-.51f,-.47f,.43f,.10f,.10f,0,.95f,.70f,.24f);part(0,-.51f,-.95f,.15f,.08f,.94f,0,.69f,.96f,.92f);part(0,-.51f,-1.45f,.08f,.06f,.13f,0,.88f,1,.99f);}

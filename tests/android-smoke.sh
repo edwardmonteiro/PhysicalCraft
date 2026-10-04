@@ -16,9 +16,11 @@ PY
 "$ANDROID_BUILD_TOOLS/apksigner" sign --ks .dev/physicalcraft-debug.keystore --ks-key-alias physicalcraft --ks-pass pass:android --out build/smoke/test.apk build/smoke/aligned.apk
 adb install -r releases/PhysicalCraft-v0.2.0.apk
 adb install -r build/smoke/test.apk
+adb shell settings put secure immersive_mode_confirmations confirmed
 adb logcat -c
-adb shell am instrument -w com.edward.physicalcraft.smoke/com.edward.physicalcraft.StartupTest | tee build/smoke/result.txt
+adb shell am instrument -w -e full_ai "${PHYSICALCRAFT_AI_TEST:-false}" com.edward.physicalcraft.smoke/com.edward.physicalcraft.StartupTest | tee build/smoke/result.txt
 adb logcat -d > build/smoke/logcat.txt
-adb pull /sdcard/Android/data/com.edward.physicalcraft/files/preview.png build/smoke/screen.png
+grep -A 20 -E "Model import failed|Local inference failed" build/smoke/logcat.txt || true
+adb pull /sdcard/Android/data/com.edward.physicalcraft.explorer/files/preview.png build/smoke/screen.png
 grep -q PHYSICALCRAFT_STARTUP_PASS build/smoke/result.txt
 if grep -E 'FATAL EXCEPTION|Fatal signal' build/smoke/logcat.txt; then exit 1; fi

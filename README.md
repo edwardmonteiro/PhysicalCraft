@@ -97,7 +97,7 @@ python3 fetch-deps.py
 ./build-sdk.sh
 ```
 
-A chave de assinatura local anterior foi removida pela manutenção do ambiente. A versão 0.2.0 usa uma nova assinatura de desenvolvimento. O Android poderá exigir desinstalar a versão antiga; isso apaga o progresso e modelos internos. Não prometa atualização direta entre essas assinaturas.
+A assinatura anterior não pôde ser recuperada após a manutenção do ambiente. Para preservar a instalação antiga, a versão 0.2.0 instala separadamente como **PhysicalCraft Explore**, com application ID `com.edward.physicalcraft.explorer`. Não desinstala nem apaga o jogo anterior. O progresso e modelos anteriores não são migrados automaticamente.
 
 A chave em `.dev/` é **privada e somente de desenvolvimento**, mantida fora do Git. O CI gera uma chave temporária por execução quando uma chave estável não é fornecida. APKs com assinaturas diferentes não atualizam a mesma instalação. Antes de distribuir atualizações contínuas, configure uma chave estável como segredo privado de CI. Para distribuição de produção, use chave privada externa via `PHYSICALCRAFT_KEYSTORE`, `PHYSICALCRAFT_KEY_ALIAS`, `PHYSICALCRAFT_KEY_PASS` (sintaxe apksigner `file:/caminho/segredo`, por exemplo). Nunca coloque chaves de produção neste repositório.
 
@@ -122,4 +122,6 @@ A chave em `.dev/` é **privada e somente de desenvolvimento**, mantida fora do 
 
 O pipeline agora exige inicialização e renderização em Android 12 emulado antes da publicação. Há diagnóstico local copiável para falhas de inicialização; nada é enviado automaticamente. Se o app fechar inesperadamente, abra novamente para ver o diagnóstico.
 
-A versão 0.2.0 acrescenta testes de alcance, direção e intervalo entre golpes, recompensas e melhorias. O pipeline exige também baixar a IA, validar seu hash, inicializar o runtime e gerar uma missão válida no Android emulado antes de publicar.
+A versão 0.2.0 acrescenta testes de alcance, direção e intervalo entre golpes, recompensas e melhorias. Alterações no runtime, no downloader, no contrato de fases ou nas dependências exigem também baixar a IA, validar seu hash, inicializar o runtime e gerar uma missão válida no Android emulado. Esse teste completo também pode ser acionado manualmente em Actions; alterações apenas visuais continuam passando pelos testes de abertura, golpes e persistência.
+
+As próximas entregas de APK nesta conversa reutilizarão a chave privada de desenvolvimento criada para 0.2.0. Essa chave não está no Git. Os APKs publicados pelo CI continuam usando a assinatura temporária descrita acima.

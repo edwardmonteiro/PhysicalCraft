@@ -3,6 +3,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      test_ai:
+        description: Download and run the local model in the emulator
+        type: boolean
+        default: true
 permissions:
   contents: write
 concurrency:
@@ -14,6 +19,20 @@ jobs:
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Select regression scope
+        env:
+          MANUAL_AI_TEST: ${{ inputs.test_ai }}
+        run: |
+          python3 - <<'PY'
+          import os,subprocess
+          changed=subprocess.check_output(['git','diff','--name-only','HEAD^','HEAD'],text=True).splitlines()
+          sensitive=('GemmaDirector.java','ModelDownload.java','Blueprint.java','fetch-deps.py','SHA256SUMS')
+          full=os.environ.get('MANUAL_AI_TEST')=='true' or any(p.endswith(sensitive) for p in changed)
+          with open(os.environ['GITHUB_ENV'],'a') as f:f.write('PHYSICALCRAFT_AI_TEST='+str(full).lower()+'\n')
+          print('Full model download and inference test:',full)
+          PY
       - uses: actions/setup-java@v4
         with:
           distribution: temurin

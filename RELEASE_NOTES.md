@@ -9,4 +9,4 @@
 - Gemma 1B continua opcional por importação após autorização no Hugging Face.
 - Inferência e jogo offline após instalar o modelo. Nenhuma chamada a IA remota.
 
-Atenção: esta versão usa outra assinatura de desenvolvimento. Se o Android bloquear a atualização, a reinstalação apaga os dados locais antigos.
+Esta versão instala separadamente como **PhysicalCraft Explore** para preservar a instalação antiga, cuja assinatura não pôde ser recuperada. O progresso anterior permanece no aplicativo antigo e não é migrado automaticamente.
